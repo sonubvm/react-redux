@@ -12,6 +12,7 @@ class Submit extends Component{
     users = [];
      id = null;
 handlechange =(e) =>{
+    console.log('hii')
     let {name} = e.target;
     let value = e.target.value;
     if(name == "lang")
