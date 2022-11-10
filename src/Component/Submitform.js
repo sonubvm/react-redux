@@ -32,7 +32,6 @@ handlechange =(e) =>{
         this.setState({[name]:value});
     }
     }
-
 handleSubmitValue = (e) => {
 e.preventDefault();
     if(this.state.id === null || this.state.id == undefined)
@@ -52,11 +51,12 @@ e.preventDefault();
     password:"",
     languages:[],
     gender:""});
+    
 }
 handleEditChange = (e, index) => {
 
     this.setState(this.users[index]);
-    this.setState({id:index});
+    this.setState({id:index});  
 }
 handleDeleteChange = (e, index) => {debugger
     this.users.splice(index, 1);
@@ -86,7 +86,7 @@ handleDeleteChange = (e, index) => {debugger
         return(
             <>
             <form style={mystyle}>
-                Name : <input type="text" name="name" onChange={(e)=>{this.handlechange(e)}} value = {this.state.name}/><br />
+                Name : <input type="text" name="name" onChange={(e)=>{this.handlechange(e)}} value = {this.state.name} required/><br />
                 Email  :  <input type="email" name="email" onChange={(e)=>{this.handlechange(e)}} value = {this.state.email}/><br />
                 Pass : <input type="password" name="password" onChange={(e)=>{this.handlechange(e)}} value = {this.state.password}/><br />
                 Languages : <input type="checkbox" name="lang" value="Eng" onChange={(e)=>{this.handlechange(e)}} checked={this.state.languages.includes("Eng")}/>Eng 

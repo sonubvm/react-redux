@@ -1,5 +1,9 @@
 import { useState, useEffect} from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch , useSelector} from "react-redux";
+import { addUser } from "./action";
+import 'bootstrap/dist/css/bootstrap.css';
+
 const Home = () =>
 {
     const [user, setUser] = useState({ name: '', email: '', password: '', gender: '', city: '', phoneno: '', languages: [] });
@@ -9,12 +13,12 @@ const Home = () =>
     const [newuser, setnewusers] = useState([{ name: '', email: '', password: '', gender: '', city: '', phoneno: '', languages: [] }]);
     let {id} = useParams();
     const navigate = useNavigate();
-    const mystyle = {
-        border: "3px solid black",
-        width: "288px",
-        marginLeft: "600px",
-        borderRadius: "10px",
-        padding : "10px"
+    const dispatch = useDispatch();
+    const reduxdata = useSelector((state)=> state.reducer.users);
+    const homeformstyle = {
+       width:"600px",
+       marginLeft:"300px"
+       
     };
     const handleChange = (e) => {
         let { name } = e.target;
@@ -35,73 +39,75 @@ const Home = () =>
         }
     }
     const handlesubmitvalue = (e) => {debugger
-        let allUsers = JSON.parse(localStorage.getItem('users'));
+        let allUsers =  JSON.parse(localStorage.getItem('reduxdata'));
         e.preventDefault();
         if(id == undefined)
         {
             allUsers.push(user);
-            localStorage.setItem("users", JSON.stringify(allUsers));
-            console.log(allUsers);
+            localStorage.setItem("reduxdata", JSON.stringify(allUsers));
         }
         else {
             allUsers[id] = user;
-                localStorage.setItem("users", JSON.stringify(allUsers));
-                console.log(allUsers);
+            localStorage.setItem("reduxdata", JSON.stringify(allUsers));
         }
         setUser({ name: '', email: '', password: '', gender: '', city: '', phoneno: '', languages: [] });
-        navigate('/Views', {users});
-    }
-    let a = JSON.parse(localStorage.getItem('newuser'));
+        let all =  JSON.parse(localStorage.getItem('reduxdata'));
+        dispatch(addUser(all));
+        navigate('/Views');
+    } 
     useEffect(()=>{
         if(id)
         {
+            let a = JSON.parse(localStorage.getItem('newuser'));
             setUser(a);
         }
     },[]);
     return (<>
-        <form onSubmit={(e) => handlesubmitvalue(e)}>
-                    <table className="table" align="center" style={mystyle}>
-                        
-                            Name : 
-                            <input type="text" name='name' value={user.name} onChange={(e) => handleChange(e)} /><br/>
-                        
-                        
-                            Phone No : 
-                            <input type="number" name='phoneno' value={user.phoneno} onChange={(e) => handleChange(e)} /><br/>
-                        
-                        
-                            Email Id :
-                            <input type="email" name='email' value={user.email} onChange={(e) => handleChange(e)} /><br/>
-                        
-                        
-                            PassWord:
-                            <input type="password" name='password' value={user.password} onChange={(e) => handleChange(e)} /><br/>
-                        
-                        
-                            City : 
-                            <select name='city' value={user.city} onChange={(e) => handleChange(e)}>
-                                <option>Surat</option>
-                                <option>Ahmedabad</option>
-                                <option>Rajkot</option>
-                                <option>Valsad</option>
-                                <option>Navsari</option>
-                            </select><br/>
-                        
-                        
-                            Languages :
-                            <input type="checkbox" name="languages" value="Eng" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Eng")} />Eng
-                                <input type="checkbox" name="languages" value="Hindi" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Hindi")} />Hindi
-                                <input type="checkbox" name="languages" value="Guj" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Guj")} />Gujarati<br/>
-                        
-                        
-                            Gender:
-                            <input type="radio" name="gender" value="female" onChange={(e) => handleChange(e)} checked={user?.gender == "female"} />Female
-                                <input type="radio" name="gender" value="male" onChange={(e) => handleChange(e)} checked={user?.gender == "male"} />Male<br/>
-                        
-                        
-                            <button>Submit</button>
-                        
-                    </table>
+        <form>
+                    <div className="container">
+                    {/* <table className="table" align="center" style={mystyle}> */}
+                    <h1 style={{textAlign:"Center"}}>Registration</h1><hr></hr>
+                        <form className="form" style={homeformstyle}>
+                        <label className="form-label "> Name : </label>
+                         <input type="text" className="form-control" name='name' value={user.name} onChange={(e) => handleChange(e)} /><br/>
+                     
+
+                         <label className="form-label "> Phone no : </label>
+                         <input type="number" className="form-control" name='phoneno' value={user.phoneno} onChange={(e) => handleChange(e)} /><br/>
+                     
+                     
+                         <label className="form-label "> Eamil Id : </label>
+                         <input type="email"  className="form-control" name='email' value={user.email} onChange={(e) => handleChange(e)} /><br/>
+                     
+                     
+                         <label className="form-label "> Password : </label>
+                         <input type="password" className="form-control" name='password' value={user.password} onChange={(e) => handleChange(e)} /><br/>
+                     
+                     
+                         <label className="form-label "> City : </label><br />
+                         <select name='city' value={user.city} onChange={(e) => handleChange(e)} className="form-control">
+                             <option>Surat</option>
+                             <option>Ahmedabad</option>
+                             <option>Rajkot</option>
+                             <option>Valsad</option>
+                             <option>Navsari</option>
+                         </select><br/>
+                     
+                     
+                         <label className="form-label "> Languages : </label><br />
+                         <input type="checkbox" name="languages"className="form-check-input" value="Eng" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Eng")} /><label className="form-label "> Eng</label>
+                             <input type="checkbox" name="languages"className="form-check-input" value="Hindi" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Hindi")} /><label className="form-label "> Hindi</label>
+                             <input type="checkbox" name="languages" className="form-check-input"value="Guj" onChange={(e) => handleChange(e)} checked={user?.languages.includes("Guj")} /><label className="form-label "> Guj</label><br/>
+                     
+                     
+                             <label className="form-label "> Gender : </label><br />
+                             <input type="radio" className="form-check-input" name="gender" value="female" onChange={(e) => handleChange(e)} checked={user?.gender == "female"} /><label className="form-label "> Female</label>
+                             <input type="radio" className="form-check-input" name="gender" value="male" onChange={(e) => handleChange(e)} checked={user?.gender == "male"} /><label className="form-label "> Male</label><br/>
+                     
+                         <button className="btn btn-info" onClick={(e) => handlesubmitvalue(e)}>Submit</button>
+                         
+                         </form>
+                    </div>
                 </form>
     </>);
 }
